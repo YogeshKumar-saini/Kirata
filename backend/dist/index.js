@@ -11,18 +11,22 @@ const app_1 = require("./app");
 console.log('5. App loaded');
 const service_1 = require("./services/scheduler/service");
 console.log('6. Scheduler loaded');
-app_1.app.listen(config_1.config.port, () => {
-    logger_1.logger.info(`Server running on port ${config_1.config.port}`);
-    try {
-        service_1.schedulerService.init();
-        logger_1.logger.info('Scheduler initialized successfully');
-    }
-    catch (error) {
-        logger_1.logger.error('Failed to initialize scheduler:', error);
-    }
-});
+// Only start the server if not in Vercel
+if (process.env.VERCEL !== '1') {
+    app_1.app.listen(config_1.config.port, () => {
+        logger_1.logger.info(`Server running on port ${config_1.config.port}`);
+        try {
+            service_1.schedulerService.init();
+            logger_1.logger.info('Scheduler initialized successfully');
+        }
+        catch (error) {
+            logger_1.logger.error('Failed to initialize scheduler:', error);
+        }
+    });
+}
 process.on('SIGTERM', async () => {
     logger_1.logger.info('SIGTERM signal received: closing HTTP server');
     await database_1.prisma.$disconnect();
     process.exit(0);
 });
+exports.default = app_1.app;

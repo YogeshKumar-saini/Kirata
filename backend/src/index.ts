@@ -11,18 +11,23 @@ console.log('5. App loaded');
 import { schedulerService } from './services/scheduler/service';
 console.log('6. Scheduler loaded');
 
-app.listen(config.port, () => {
-    logger.info(`Server running on port ${config.port}`);
-    try {
-        schedulerService.init();
-        logger.info('Scheduler initialized successfully');
-    } catch (error) {
-        logger.error('Failed to initialize scheduler:', error);
-    }
-});
+// Only start the server if not in Vercel
+if (process.env.VERCEL !== '1') {
+    app.listen(config.port, () => {
+        logger.info(`Server running on port ${config.port}`);
+        try {
+            schedulerService.init();
+            logger.info('Scheduler initialized successfully');
+        } catch (error) {
+            logger.error('Failed to initialize scheduler:', error);
+        }
+    });
+}
 
 process.on('SIGTERM', async () => {
     logger.info('SIGTERM signal received: closing HTTP server');
     await prisma.$disconnect();
     process.exit(0);
 });
+
+export default app;
