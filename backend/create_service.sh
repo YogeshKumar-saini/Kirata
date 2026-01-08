@@ -75,7 +75,7 @@ sleep 10
 log "Creating App Runner Service '$SERVICE_NAME'..."
 
 aws apprunner create-service \
-    --service-name "$SERVICE_NAME" \
+    --service-name kirata \
     --source-configuration '{
         "AuthenticationConfiguration": {
             "AccessRoleArn": "'"$ROLE_ARN"'"

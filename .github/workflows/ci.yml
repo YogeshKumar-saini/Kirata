@@ -105,12 +105,12 @@ jobs:
 
       - name: Deploy to App Runner
         run: |
-          SERVICE_ARN=$(aws apprunner list-services --region ${{ secrets.AWS_REGION }} --query "ServiceSummaryList[?ServiceName=='kirata-backend'].ServiceArn" --output text)
+          SERVICE_ARN=$(aws apprunner list-services --region ${{ secrets.AWS_REGION }} --query "ServiceSummaryList[?ServiceName=='kirata'].ServiceArn" --output text)
           echo "Service ARN: $SERVICE_ARN"
 
           if [ -z "$SERVICE_ARN" ] || [ "$SERVICE_ARN" == "None" ]; then
-            echo "❌ Error: App Runner service 'kirata-backend' not found in region ${{ secrets.AWS_REGION }}."
-            echo "Please run './create_service.sh' locally to provision the service first."
+            echo "❌ Error: App Runner service 'kirata' not found in region ${{ secrets.AWS_REGION }}."
+            echo "Please ensure you have created the service manually or run './create_service.sh'."
             exit 1
           fi
 

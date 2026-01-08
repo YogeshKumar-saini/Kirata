@@ -10,6 +10,7 @@ RUN npm run build # Assuming a build script exists, otherwise tsc
 # Production Stage
 FROM node:18-alpine
 WORKDIR /app
+RUN apk add --no-cache openssl
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
