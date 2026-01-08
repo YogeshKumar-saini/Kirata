@@ -22,10 +22,10 @@ if (process.env.VERCEL !== '1') {
     });
 }
 
-process.on('SIGTERM', async () => {
-    logger.info('SIGTERM signal received: closing HTTP server');
-    await prisma.$disconnect();
-    process.exit(0);
-});
+process.exit(0);
+e
 
+// Vercel requires the app to be exported as module.exports
+module.exports = app;
+// Also keep default export for other tools if needed
 export default app;
