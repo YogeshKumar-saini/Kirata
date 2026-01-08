@@ -1,0 +1,586 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  adminId             String    @id @default(uuid()) @map("admin_id")
+  uniqueId            String    @unique @map("unique_id")
+  email               String?   @unique
+  phone               String?   @unique
+  password            String?
+  name                String?
+  address             String?   @map("address")
+  role                AdminRole
+  otpSecret           String?   @map("otp_secret")
+  otpExpiry           DateTime? @map("otp_expiry")
+  isPhoneVerified     Boolean   @default(false) @map("is_phone_verified")
+  isEmailVerified     Boolean   @default(false) @map("is_email_verified")
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
+  deletedAt           DateTime? @map("deleted_at")
+  scheduledDeletionAt DateTime? @map("scheduled_deletion_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+
+  @@map("admins")
+}
+
+model Shopkeeper {
+  id                    String           @id @default(uuid()) @map("id")
+  phone                 String?          @unique
+  uniqueId              String           @unique @map("unique_id")
+  email                 String?          @unique
+  password              String?
+  name                  String?
+  address               String?          @map("address")
+  addressLine1          String?          @map("address_line1")
+  addressLine2          String?          @map("address_line2")
+  city                  String?
+  state                 String?
+  pincode               String?
+  otpSecret             String?          @map("otp_secret")
+  otpExpiry             DateTime?        @map("otp_expiry")
+  isPhoneVerified       Boolean          @default(false) @map("is_phone_verified")
+  isEmailVerified       Boolean          @default(false) @map("is_email_verified")
+  failedLoginAttempts   Int              @default(0) @map("failed_login_attempts")
+  lockedUntil           DateTime?        @map("locked_until")
+  deletedAt             DateTime?        @map("deleted_at")
+  scheduledDeletionAt   DateTime?        @map("scheduled_deletion_at")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  hasCompletedShopSetup Boolean          @default(false) @map("has_completed_shop_setup")
+  primaryShopId         String?          @map("primary_shop_id")
+  transactionPin        String?          @map("transaction_pin")
+  staffRoles            ShopStaff[]
+  shops                 Shop[]
+  preferences           UserPreferences?
+
+  @@map("shopkeepers")
+}
+
+model Customer {
+  id                  String    @id @default(uuid()) @map("id")
+  phone               String?   @unique
+  email               String?   @unique
+  uniqueId            String    @unique @map("unique_id")
+  name                String?
+  address             String?   @map("address")
+  addressLine1        String?   @map("address_line1")
+  addressLine2        String?   @map("address_line2")
+  city                String?
+  state               String?
+  pincode             String?
+  photoUrl            String?   @map("photo_url")
+  notificationPrefs   Json?     @default("{}") @map("notification_prefs")
+  gender              String?
+  dateOfBirth         DateTime? @map("date_of_birth")
+  
+  password            String?
+  otpSecret           String?   @map("otp_secret")
+  otpExpiry           DateTime? @map("otp_expiry")
+  isPhoneVerified     Boolean   @default(false) @map("is_phone_verified")
+  isEmailVerified     Boolean   @default(false) @map("is_email_verified")
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
+  deletedAt           DateTime? @map("deleted_at")
+  scheduledDeletionAt DateTime? @map("scheduled_deletion_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  creditLimit         Decimal?  @db.Decimal(10, 2)
+  notes               String?
+  tags                String[]  @default([])
+  orders              Order[]
+  payments            Payment[]
+  Review              Review[]
+  sales                 Sale[]
+  udhaarRecords         Udhaar[]
+  notifications         Notification[]
+  personalLedgerEntries PersonalLedgerEntry[] @relation("Creator")
+  receivedPersonalLedgerEntries PersonalLedgerEntry[] @relation("LinkedCustomer")
+
+  @@map("customers")
+}
+
+model Shop {
+  shopId                  String             @id @default(uuid()) @map("shop_id")
+  ownerId                 String             @map("owner_id")
+  name                    String
+  category                ShopCategory
+  location                String?
+  isActive                Boolean            @default(true) @map("is_active")
+  createdAt               DateTime           @default(now()) @map("created_at")
+  deletedAt               DateTime?          @map("deleted_at")
+  addressLine1            String?            @map("address_line1")
+  addressLine2            String?            @map("address_line2")
+  alternatePhone          String?            @map("alternate_phone")
+  businessHours           Json?              @map("business_hours")
+  city                    String?
+  email                   String?
+  gstNumber               String?            @map("gst_number")
+  isProfileComplete       Boolean            @default(false) @map("is_profile_complete")
+  phone                   String?
+  photoUrl                String?            @map("photo_url")
+  pincode                 String?
+  state                   String?
+  whatsappNumber          String?            @map("whatsapp_number")
+  photoMedium             String?            @map("photo_medium")
+  photoThumbnail          String?            @map("photo_thumbnail")
+  averageRating           Float?             @default(0) @map("average_rating")
+  totalReviews            Int                @default(0) @map("total_reviews")
+  logoUrl                 String?            @map("logo_url")
+  photoUrls               Json?              @map("photo_urls")
+  businessHoursExceptions Json?              @map("business_hours_exceptions")
+  vacationEndDate         DateTime?          @map("vacation_end_date")
+  vacationMessage         String?            @map("vacation_message")
+  vacationMode            Boolean            @default(false) @map("vacation_mode")
+  vacationStartDate       DateTime?          @map("vacation_start_date")
+  verificationDocs        Json?              @map("verification_docs")
+  verificationNotes       String?            @map("verification_notes")
+  verificationStatus      VerificationStatus @default(PENDING) @map("verification_status")
+  verifiedBy              String?            @map("verified_by")
+  latitude                Float?             @map("latitude")
+  longitude               Float?             @map("longitude")
+  offers                  Offer[]
+  orders                  Order[]
+  payments                Payment[]
+  products                Product[]
+  Review                  Review[]
+  sales                   Sale[]
+  ShopAnalytics           ShopAnalytics[]
+  staff                   ShopStaff[]
+  owner                   Shopkeeper         @relation(fields: [ownerId], references: [id])
+  udhaar                  Udhaar[]
+  personalLedgerEntries   PersonalLedgerEntry[]
+  notifications           Notification[]
+  @@index([city, category])
+  @@index([averageRating])
+  @@index([ownerId, deletedAt])
+  @@index([latitude, longitude])
+  @@map("shops")
+}
+
+model Order {
+  orderId          String      @id @default(uuid()) @map("order_id")
+  shopId           String      @map("shop_id")
+  customerId       String      @map("customer_id")
+  items            Json
+  status           OrderStatus @default(PENDING)
+  paymentPreference PaymentType? @map("payment_preference")
+  fulfillmentMethod FulfillmentMethod? @map("fulfillment_method")
+  pickupEtaMinutes Int?        @map("pickup_eta_minutes")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @default(now()) @updatedAt @map("updated_at")
+  deletedAt        DateTime?   @map("deleted_at")
+  discount         Decimal     @default(0) @db.Decimal(10, 2)
+  deliveryCharge   Decimal     @default(0) @map("delivery_charge") @db.Decimal(10, 2)
+  offerId          String?     @map("offer_id")
+  totalAmount      Decimal     @default(0) @map("total_amount") @db.Decimal(10, 2)
+  priceVerified    Boolean     @default(false) @map("price_verified")
+  verifiedAt       DateTime?   @map("verified_at")
+  verifiedBy       String?     @map("verified_by")
+  customer         Customer    @relation(fields: [customerId], references: [id])
+  offer            Offer?      @relation(fields: [offerId], references: [offerId])
+  shop             Shop        @relation(fields: [shopId], references: [shopId])
+  payments         Payment[]
+
+  @@index([shopId, createdAt])
+  @@index([shopId, status])
+  @@index([customerId, status])
+  @@index([customerId, createdAt])
+  @@map("orders")
+}
+
+model Sale {
+  saleId      String      @id @default(uuid()) @map("sale_id")
+  shopId      String      @map("shop_id")
+  customerId  String?     @map("customer_id")
+  amount      Decimal     @db.Decimal(10, 2)
+  paymentType PaymentType @map("payment_type")
+  source      SaleSource
+  createdAt   DateTime    @default(now()) @map("created_at")
+  attachments Json?
+  category    String?
+  editReason  String?     @map("edit_reason")
+  editedAt    DateTime?   @map("edited_at")
+  editedBy    String?     @map("edited_by")
+  notes       String?
+  tags        String[]    @default([])
+  customer    Customer?   @relation(fields: [customerId], references: [id])
+  shop        Shop        @relation(fields: [shopId], references: [shopId])
+  udhaarRef   Udhaar?
+
+  @@index([shopId, createdAt])
+  @@index([shopId, paymentType])
+  @@index([shopId, customerId, createdAt])
+  @@index([customerId, paymentType])
+  @@map("sales")
+}
+
+model Udhaar {
+  udhaarId        String       @id @default(uuid()) @map("udhaar_id")
+  shopId          String       @map("shop_id")
+  customerId      String       @map("customer_id")
+  amount          Decimal      @db.Decimal(10, 2)
+  status          UdhaarStatus @default(OPEN)
+  referenceSaleId String?      @unique @map("reference_sale_id")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  closedAt        DateTime?    @map("closed_at")
+  customer        Customer     @relation(fields: [customerId], references: [id])
+  referenceSale   Sale?        @relation(fields: [referenceSaleId], references: [saleId])
+  shop            Shop         @relation(fields: [shopId], references: [shopId])
+
+  @@index([shopId, status])
+  @@index([customerId, status])
+  @@index([shopId, customerId, status])
+  @@map("udhaar_ledger")
+}
+
+model MessageLog {
+  messageId  String   @id @map("message_id")
+  phone      String
+  rawMessage String   @map("raw_message")
+  intent     String?
+  processed  Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("message_logs")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  action    String
+  details   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@map("audit_logs")
+}
+
+model ShopAnalytics {
+  id      String   @id @default(uuid())
+  shopId  String   @map("shop_id")
+  date    DateTime @db.Date
+  views   Int      @default(0)
+  orders  Int      @default(0)
+  revenue Decimal  @default(0) @db.Decimal(10, 2)
+  profit  Decimal  @default(0) @db.Decimal(10, 2)
+  shop    Shop     @relation(fields: [shopId], references: [shopId])
+
+  @@unique([shopId, date])
+  @@index([shopId, date])
+  @@map("shop_analytics")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+model Review {
+  reviewId   String   @id @default(uuid()) @map("review_id")
+  shopId     String   @map("shop_id")
+  customerId String   @map("customer_id")
+  rating     Int
+  comment    String?
+  images     Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  customer   Customer @relation(fields: [customerId], references: [id])
+  shop       Shop     @relation(fields: [shopId], references: [shopId])
+
+  @@index([customerId])
+  @@map("reviews")
+}
+
+model Product {
+  productId         String           @id @default(uuid()) @map("product_id")
+  shopId            String           @map("shop_id")
+  name              String
+  description       String?
+  price             Decimal          @db.Decimal(10, 2)
+  mrp               Decimal?         @db.Decimal(10, 2)
+  stock             Int              @default(0)
+  category          String?
+  imageUrl          String?          @map("image_url")
+  barcode           String?
+  isActive          Boolean          @default(true) @map("is_active")
+  createdAt         DateTime         @default(now()) @map("created_at")
+  updatedAt         DateTime         @updatedAt @map("updated_at")
+  deletedAt         DateTime?        @map("deleted_at")
+  costPrice         Decimal?         @map("cost_price") @db.Decimal(10, 2)
+  images            Json?
+  lowStockThreshold Int              @default(10) @map("low_stock_threshold")
+  supplierId        String?          @map("supplier_id")
+  variants          ProductVariant[]
+  shop              Shop             @relation(fields: [shopId], references: [shopId])
+  supplier          Supplier?        @relation(fields: [supplierId], references: [id])
+
+  @@index([shopId, category])
+  @@index([shopId, name])
+  @@map("products")
+}
+
+model ProductVariant {
+  variantId String   @id @default(uuid()) @map("variant_id")
+  productId String   @map("product_id")
+  name      String
+  sku       String?
+  price     Decimal  @db.Decimal(10, 2)
+  mrp       Decimal? @db.Decimal(10, 2)
+  costPrice Decimal? @map("cost_price") @db.Decimal(10, 2)
+  stock     Int      @default(0)
+  unit      String?
+  unitValue Decimal? @map("unit_value") @db.Decimal(10, 2)
+  isActive  Boolean  @default(true) @map("is_active")
+  product   Product  @relation(fields: [productId], references: [productId])
+
+  @@index([productId])
+  @@map("product_variants")
+}
+
+model Supplier {
+  id        String    @id @default(uuid())
+  shopId    String    @map("shop_id")
+  name      String
+  phone     String?
+  email     String?
+  address   String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  products  Product[]
+
+  @@map("suppliers")
+}
+
+model Offer {
+  offerId       String    @id @default(uuid()) @map("offer_id")
+  shopId        String    @map("shop_id")
+  code          String
+  value         Decimal   @db.Decimal(10, 2)
+  description   String?
+  validFrom     DateTime? @map("valid_from")
+  validTo       DateTime? @map("valid_to")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  maxDiscount   Decimal?  @map("max_discount") @db.Decimal(10, 2)
+  minOrderValue Decimal?  @map("min_order_value") @db.Decimal(10, 2)
+  usageCount    Int       @default(0) @map("usage_count")
+  usageLimit    Int?      @map("usage_limit")
+  type          OfferType
+  shop          Shop      @relation(fields: [shopId], references: [shopId])
+  orders        Order[]
+
+  @@index([shopId, code])
+  @@map("offers")
+}
+
+model ShopStaff {
+  id        String     @id @default(uuid())
+  shopId    String     @map("shop_id")
+  userId    String     @map("user_id")
+  role      ShopRole
+  isActive  Boolean    @default(true) @map("is_active")
+  createdAt DateTime   @default(now()) @map("created_at")
+  shop      Shop       @relation(fields: [shopId], references: [shopId])
+  user      Shopkeeper @relation(fields: [userId], references: [id])
+
+  @@unique([shopId, userId])
+  @@map("shop_staff")
+}
+
+model UserPreferences {
+  id                String     @id @default(uuid())
+  userId            String     @unique @map("user_id")
+  notificationPrefs Json?      @default("{}") @map("notification_prefs")
+  reminderTemplates Json?      @default("[]") @map("reminder_templates")
+  filterPresets     Json?      @default("[]") @map("filter_presets")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  user              Shopkeeper @relation(fields: [userId], references: [id])
+
+  @@map("user_preferences")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  SHOP_MANAGER_ADMIN
+  SUPPORT_ADMIN
+}
+
+enum ShopCategory {
+  GROCERY
+  MEDICAL
+  HARDWARE
+  OTHER
+}
+
+enum ShopStatus {
+  ACTIVE
+  TEMPORARILY_CLOSED
+  PERMANENTLY_CLOSED
+  PENDING_VERIFICATION
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  UNDER_REVIEW
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+}
+
+model Notification {
+  id          String              @id @default(uuid())
+  shopId      String              @map("shop_id")
+  customerId  String?             @map("customer_id")
+  type        NotificationType
+  channel     NotificationChannel
+  status      NotificationStatus  @default(PENDING)
+  title       String?
+  message     String
+  metadata    Json?
+  sentAt      DateTime?           @map("sent_at")
+  createdAt   DateTime            @default(now()) @map("created_at")
+  shop        Shop                @relation(fields: [shopId], references: [shopId])
+  customer    Customer?           @relation(fields: [customerId], references: [id])
+
+  @@index([shopId, createdAt])
+  @@index([customerId])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  PAYMENT_REMINDER
+  ORDER_UPDATE
+  MARKETING
+  SYSTEM
+}
+
+enum NotificationChannel {
+  SMS
+  WHATSAPP
+  EMAIL
+  PUSH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  READY
+  COLLECTED
+  CANCELLED
+}
+
+enum PaymentType {
+  CASH
+  UPI
+  UDHAAR
+}
+
+enum SaleSource {
+  MANUAL
+  ORDER
+}
+
+enum UdhaarStatus {
+  OPEN
+  PAID
+}
+
+enum OfferType {
+  PERCENTAGE
+  FLAT
+}
+
+enum ShopRole {
+  MANAGER
+  STAFF
+}
+
+model PersonalLedgerEntry {
+  id              String             @id @default(uuid())
+  userId          String             @map("user_id")
+  contactPhone    String             @map("contact_phone")
+  contactName     String             @map("contact_name")
+  amount          Decimal            @db.Decimal(10, 2)
+  type            PersonalLedgerType
+  notes           String?
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+  
+  linkedShopId    String?            @map("linked_shop_id")
+  linkedCustomerId String?           @map("linked_customer_id")
+
+  customer        Customer           @relation("Creator", fields: [userId], references: [id])
+  linkedShop      Shop?              @relation(fields: [linkedShopId], references: [shopId])
+  linkedCustomer  Customer?          @relation("LinkedCustomer", fields: [linkedCustomerId], references: [id])
+
+  @@index([userId, contactPhone])
+  @@map("personal_ledger_entries")
+}
+
+enum PersonalLedgerType {
+  GAVE
+  TOOK
+}
+
+enum FulfillmentMethod {
+  PICKUP
+  DELIVERY
+}
+
+model Payment {
+  id              String      @id @default(uuid())
+  orderId         String?     @map("order_id")
+  shopId          String      @map("shop_id")
+  customerId      String      @map("customer_id")
+  amount          Decimal     @db.Decimal(10, 2)
+  currency        String      @default("INR")
+  status          PaymentStatus @default(PENDING)
+  method          String?
+  gatewayOrderId  String?     @unique @map("gateway_order_id")
+  gatewayPaymentId String?    @map("gateway_payment_id")
+  gatewaySignature String?    @map("gateway_signature")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  shop            Shop        @relation(fields: [shopId], references: [shopId])
+  customer        Customer    @relation(fields: [customerId], references: [id])
+  order           Order?      @relation(fields: [orderId], references: [orderId])
+
+  @@index([shopId, createdAt])
+  @@index([customerId, createdAt])
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
