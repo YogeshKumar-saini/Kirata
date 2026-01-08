@@ -38,6 +38,7 @@ const config_1 = require("./shared/config");
 console.log('2. Config loaded');
 const logger_1 = require("./shared/utils/logger");
 console.log('3. Logger loaded');
+const database_1 = require("./shared/database");
 console.log('4. Prisma loaded');
 const app_1 = require("./app");
 console.log('5. App loaded');
@@ -55,8 +56,11 @@ if (process.env.VERCEL !== '1') {
         }
     });
 }
-process.exit(0);
-;
+process.on('SIGTERM', async () => {
+    logger_1.logger.info('SIGTERM signal received: closing HTTP server');
+    await database_1.prisma.$disconnect();
+    process.exit(0);
+});
 // Vercel requires the app to be exported as module.exports
 module.exports = app_1.app;
 // Also keep default export for other tools if needed
