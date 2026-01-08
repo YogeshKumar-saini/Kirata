@@ -23,7 +23,7 @@ if (process.env.VERCEL !== '1') {
 }
 
 process.exit(0);
-e
+
 
 // Vercel requires the app to be exported as module.exports
 module.exports = app;
