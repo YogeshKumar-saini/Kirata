@@ -8,14 +8,12 @@ console.log('4. Prisma loaded');
 import { app } from './app';
 console.log('5. App loaded');
 
-import { schedulerService } from './services/scheduler/service';
-console.log('6. Scheduler loaded');
-
 // Only start the server if not in Vercel
 if (process.env.VERCEL !== '1') {
-    app.listen(config.port, () => {
+    app.listen(config.port, async () => {
         logger.info(`Server running on port ${config.port}`);
         try {
+            const { schedulerService } = await import('./services/scheduler/service');
             schedulerService.init();
             logger.info('Scheduler initialized successfully');
         } catch (error) {
