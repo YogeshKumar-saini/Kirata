@@ -4,3 +4,5 @@
 *.next
 
 .env
+backend/create_service.sh
+backend/deploy_backend.sh
