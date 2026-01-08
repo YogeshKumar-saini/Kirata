@@ -65,10 +65,12 @@ router.post('/customer/register', (0, validate_middleware_1.validate)(auth_valid
     res.json(result);
 }));
 router.post('/auth/google', (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    console.log('[Back] Route /auth/google HIT. Body token length:', req.body.token?.length);
     const { token } = req.body;
     if (!token)
         throw new ApiError_1.ApiError(400, "Google token required");
     const result = await GoogleAuthService.handleGoogleLogin(token);
+    console.log('[Back] Route /auth/google Result:', result.status ? result.status : 'Success');
     res.json(result);
 }));
 router.post('/auth/google/register', (0, asyncHandler_1.asyncHandler)(async (req, res) => {
