@@ -108,6 +108,12 @@ jobs:
           SERVICE_ARN=$(aws apprunner list-services --region ${{ secrets.AWS_REGION }} --query "ServiceSummaryList[?ServiceName=='kirata-backend'].ServiceArn" --output text)
           echo "Service ARN: $SERVICE_ARN"
 
+          if [ -z "$SERVICE_ARN" ] || [ "$SERVICE_ARN" == "None" ]; then
+            echo "❌ Error: App Runner service 'kirata-backend' not found in region ${{ secrets.AWS_REGION }}."
+            echo "Please run './create_service.sh' locally to provision the service first."
+            exit 1
+          fi
+
           echo "Checking service status..."
           # Wait loop for service to be ready
           MAX_RETRIES=40 # 20 minutes max
