@@ -16,7 +16,7 @@ import { Stats } from "@/components/landing/Stats";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { FloatingActionButton } from "@/components/ui/FloatingActionButton";
 import { AnimatedGrid } from "@/components/ui/AnimatedGrid";
-import { CustomCursor } from "@/components/ui/CustomCursor";
+
 import { DynamicBackground } from "@/components/ui/DynamicBackground";
 
 // Dynamic imports for below-the-fold components
@@ -75,12 +75,16 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#030014] font-sans text-foreground selection:bg-purple-500/30 scroll-smooth">
+    <div className="relative min-h-screen bg-[#030014] font-sans text-foreground selection:bg-purple-500/30 scroll-smooth overflow-x-hidden">
+      {/* Enhanced Background Layers */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#030014] via-[#0a0520] to-[#030014]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.08),rgba(255,255,255,0))]" />
+      </div>
       {/* Dynamic Scroll Background */}
       <DynamicBackground />
 
-      {/* Custom Cursor */}
-      <CustomCursor />
+
 
       {/* Animated Background Grid */}
       <AnimatedGrid />
@@ -94,17 +98,18 @@ export default function Home() {
 
       {/* ================= NAVBAR ================= */}
       <header
-        className={`fixed top-0 z-50 w-full border-b transition-all duration-300 ${isScrolled
-          ? "border-white/10 bg-[#030014]/90 backdrop-blur-xl shadow-lg shadow-black/20"
-          : "border-white/5 bg-[#030014]/70 backdrop-blur-xl"
+        className={`fixed top-0 z-50 w-full transition-all duration-500 ${isScrolled
+          ? "border-b border-white/10 bg-[#030014]/80 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+          : "border-b border-white/5 bg-[#030014]/60 backdrop-blur-xl"
           }`}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-8">
           {/* Brand */}
-          <Link href="/" className="group flex items-center gap-3">
+          <Link href="/" className="group flex items-center gap-3 relative z-10">
             <motion.div
-              className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden transition-transform group-hover:scale-105"
-              whileHover={{ rotate: 5 }}
+              className="flex h-12 w-12 items-center justify-center rounded-2xl overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.4)]"
+              whileHover={{ rotate: 5, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
               <img
                 src="/logo-icon.png"
@@ -112,23 +117,31 @@ export default function Home() {
                 className="h-full w-full object-contain"
               />
             </motion.div>
-            <span className="text-lg font-semibold tracking-tight text-white">
+            <span className="text-xl font-bold tracking-tight text-white">
               Kirata
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-all hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] ${activeSection === link.href.slice(1)
+                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg group ${activeSection === link.href.slice(1)
                   ? "text-white"
-                  : "text-gray-300"
+                  : "text-gray-300 hover:text-white"
                   }`}
               >
-                {link.label}
+                <span className="relative z-10">{link.label}</span>
+                {activeSection === link.href.slice(1) && (
+                  <motion.div
+                    layoutId="activeSection"
+                    className="absolute inset-0 bg-white/10 rounded-lg"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/0 to-blue-500/0 opacity-0 group-hover:opacity-100 group-hover:from-purple-500/10 group-hover:to-blue-500/10 transition-all duration-300" />
               </a>
             ))}
           </nav>
@@ -137,83 +150,107 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="hidden sm:block text-sm font-medium text-gray-300 transition hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+              className="hidden sm:block text-sm font-medium text-gray-300 transition-all duration-300 hover:text-white px-4 py-2 rounded-lg hover:bg-white/5"
             >
               Login
             </Link>
 
-            <Link href="/register" className="hidden sm:block">
+            <Link href="/register" className="hidden sm:block group">
               <Button
                 size="sm"
-                className="rounded-full bg-white px-6 text-black shadow-lg transition-all hover:bg-gray-200 hover:shadow-white/20 hover:scale-105"
+                className="rounded-full bg-gradient-to-r from-purple-500 to-blue-500 px-6 py-2 h-10 text-white shadow-lg shadow-purple-500/25 transition-all duration-300 hover:shadow-purple-500/40 hover:scale-105 font-semibold border-0"
               >
-                Get Started
+                <span className="relative z-10">Get Started</span>
               </Button>
             </Link>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="md:hidden p-2.5 rounded-xl hover:bg-white/10 transition-all duration-300 backdrop-blur-sm border border-white/10"
               aria-label="Open menu"
             >
-              <Menu className="w-6 h-6 text-white" />
+              <Menu className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
       </header>
 
       {/* ================= MAIN ================= */}
-      <main className="relative z-10 flex-1 pt-16">
+      <main className="relative z-10 flex-1">
         <div id="hero">
           <Hero />
         </div>
-        <div id="social-proof">
+        <div id="social-proof" className="relative">
           <SocialProof />
         </div>
         <SectionDivider variant="gradient" />
-        <Stats />
+        <div className="relative">
+          <Stats />
+        </div>
         <SectionDivider variant="dots" />
-        <AppShowcase />
+        <div className="relative">
+          <AppShowcase />
+        </div>
         <SectionDivider variant="line" />
-        <LiveTicker />
+        <div className="relative">
+          <LiveTicker />
+        </div>
         <SectionDivider variant="line" />
-        <ProductTour />
+        <div className="relative">
+          <ProductTour />
+        </div>
         <SectionDivider variant="gradient" />
-        <HowItWorks />
+        <div className="relative">
+          <HowItWorks />
+        </div>
         <SectionDivider variant="dots" />
-        <div id="features">
+        <div id="features" className="relative">
           <Features />
         </div>
         <SectionDivider variant="line" />
-        <ComparisonSlider />
+        <div className="relative">
+          <ComparisonSlider />
+        </div>
         <SectionDivider variant="gradient" />
-        <Integrations />
+        <div className="relative">
+          <Integrations />
+        </div>
         <SectionDivider variant="dots" />
-        <TechStack />
+        <div className="relative">
+          <TechStack />
+        </div>
         <SectionDivider variant="line" />
-        <SuccessStories />
+        <div className="relative">
+          <SuccessStories />
+        </div>
         <SectionDivider variant="gradient" />
-        <div id="testimonials">
+        <div id="testimonials" className="relative">
           <Testimonials />
         </div>
         <SectionDivider variant="dots" />
-        <ROICalculator />
+        <div className="relative">
+          <ROICalculator />
+        </div>
         <SectionDivider variant="line" />
-        <div id="pricing">
+        <div id="pricing" className="relative">
           <Pricing />
         </div>
         <SectionDivider variant="gradient" />
-        <div id="faq">
+        <div id="faq" className="relative">
           <FAQ />
         </div>
         <SectionDivider variant="dots" />
-        <div id="newsletter">
+        <div id="newsletter" className="relative">
           <Newsletter />
         </div>
         <SectionDivider variant="line" />
-        <TrustBadges />
-        <CallToAction />
+        <div className="relative">
+          <TrustBadges />
+        </div>
+        <div className="relative">
+          <CallToAction />
+        </div>
       </main>
 
       {/* Back to Top Button */}

@@ -254,7 +254,10 @@
   body {
     @apply text-foreground antialiased selection:bg-primary/20 selection:text-primary;
     background-color: transparent;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1, "ss02" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* .dark body {
@@ -271,25 +274,83 @@
   .glass {
     @apply bg-card/60 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg;
   }
+  
+  .glass-premium {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)];
+  }
 
   /* Modern scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-muted/20;
+    @apply bg-[#030014];
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/50 rounded-full hover:bg-muted-foreground/70 transition-colors;
+    @apply bg-purple-500/30 rounded-full hover:bg-purple-500/50 transition-colors;
+    border: 2px solid #030014;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-purple-500/70;
   }
 
   /* Custom Utilities */
   .animate-wave {
     animation: wave 2.5s infinite;
     transform-origin: 70% 70%;
+  }
+  
+  /* Premium text gradients */
+  .text-gradient-premium {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300;
+  }
+  
+  /* Shimmer effect */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+  
+  /* Glow effects */
+  .glow-purple {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+  }
+  
+  .glow-blue {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+  }
+  
+  .glow-pink {
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.3);
   }
 
   @keyframes wave {

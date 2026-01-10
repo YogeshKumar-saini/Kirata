@@ -37,84 +37,111 @@ export function Hero() {
         <section
             ref={containerRef}
             onMouseMove={handleMouseMove}
-            className="relative min-h-[110vh] flex items-center justify-center bg-gradient-to-b from-[#030014] via-[#0a0520] to-[#030014] pt-20 perspective-[1000px] overflow-hidden group"
+            className="relative min-h-screen flex items-center justify-center bg-[#030014] pt-20 perspective-[1200px] overflow-hidden group"
         >
-            {/* Background Image Layer */}
-            <div className="absolute inset-0 z-0 select-none">
-                <div className="absolute inset-0 bg-[#030014]">
+            {/* Premium Background Layers */}
+            <div className="absolute inset-0 z-0">
+                {/* Base gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#030014] via-[#0a0520] to-[#050318]" />
+                
+                {/* Hero Background Image */}
+                <div className="absolute inset-0">
                     <Image
                         src="/hero-bg-future.png"
                         alt="Retail Future Background"
                         fill
-                        className="object-cover opacity-40 mix-blend-screen"
+                        className="object-cover opacity-30 mix-blend-lighten"
                         priority
-                        quality={90}
+                        quality={95}
                     />
                 </div>
-                {/* Dark overlay for better text contrast */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#030014] via-[#030014]/80 to-[#030014]" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/30 via-[#030014]/40 to-[#030014]" />
+                
+                {/* Gradient Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#030014]/50 via-transparent to-[#030014]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
+                
+                {/* Grid Pattern */}
+                <div className="absolute inset-0 opacity-[0.015]" style={{
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+                    backgroundSize: '50px 50px'
+                }} />
             </div>
 
             {/* Particle Field */}
-            <ParticleField particleCount={60} className="z-10" color="rgba(168, 85, 247, 0.4)" />
+            <ParticleField particleCount={80} className="z-10" color="rgba(168, 85, 247, 0.5)" />
 
-            {/* Gradient Mesh Background */}
+            {/* Advanced Gradient Mesh Background */}
             <div className="absolute inset-0 pointer-events-none z-10">
                 <motion.div
                     animate={{
-                        x: [0, 100, 0],
-                        y: [0, -100, 0],
-                        scale: [1, 1.2, 1],
-                    }}
-                    transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                    className="absolute -top-1/2 -left-1/4 w-[800px] h-[800px] rounded-full bg-purple-600/20 blur-[120px]"
-                />
-
-                <motion.div
-                    animate={{
-                        x: [0, -100, 0],
-                        y: [0, 100, 0],
+                        x: [0, 120, 0],
+                        y: [0, -80, 0],
                         scale: [1, 1.3, 1],
                     }}
                     transition={{
                         duration: 25,
                         repeat: Infinity,
                         ease: "easeInOut",
-                        delay: 2,
                     }}
-                    className="absolute -bottom-1/2 -right-1/4 w-[900px] h-[900px] rounded-full bg-blue-600/20 blur-[120px]"
+                    className="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] rounded-full bg-gradient-to-r from-purple-600/25 to-violet-600/25 blur-[140px]"
                 />
 
                 <motion.div
                     animate={{
-                        x: [0, 50, 0],
-                        y: [0, -50, 0],
-                        scale: [1, 1.1, 1],
+                        x: [0, -120, 0],
+                        y: [0, 120, 0],
+                        scale: [1, 1.4, 1],
                     }}
                     transition={{
-                        duration: 18,
+                        duration: 30,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 2,
+                    }}
+                    className="absolute -bottom-1/2 -right-1/4 w-[1100px] h-[1100px] rounded-full bg-gradient-to-l from-blue-600/25 to-cyan-600/25 blur-[140px]"
+                />
+
+                <motion.div
+                    animate={{
+                        x: [0, 60, 0],
+                        y: [0, -60, 0],
+                        scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                        duration: 22,
                         repeat: Infinity,
                         ease: "easeInOut",
                         delay: 4,
                     }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-pink-600/15 blur-[120px]"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 blur-[130px]"
+                />
+                
+                {/* Additional accent orbs */}
+                <motion.div
+                    animate={{
+                        x: [0, -40, 0],
+                        y: [0, 40, 0],
+                        opacity: [0.3, 0.6, 0.3],
+                    }}
+                    transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1,
+                    }}
+                    className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-500/20 to-transparent blur-[100px]"
                 />
             </div>
 
-            {/* Mouse Spotlight */}
+            {/* Premium Mouse Spotlight */}
             <motion.div
-                className="pointer-events-none absolute -inset-px rounded-xl opacity-0 bg-[#030014] transition duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                 style={{
                     background: useMotionTemplate`
                         radial-gradient(
-                            650px circle at ${mouseX}px ${mouseY}px,
-                            rgba(255, 255, 255, 0.1),
-                            transparent 80%
+                            800px circle at ${mouseX}px ${mouseY}px,
+                            rgba(168, 85, 247, 0.15),
+                            transparent 70%
                         )
                     `,
                 }}
@@ -151,20 +178,25 @@ export function Hero() {
                     </motion.div>
                 </motion.div>
 
-                <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-8 relative">
+                <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 relative leading-[0.95]">
                     <motion.span
-                        initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+                        initial={{ opacity: 0, y: 60, filter: "blur(20px)" }}
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="block text-white mb-2"
+                        transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        className="block text-white mb-4 drop-shadow-[0_0_40px_rgba(255,255,255,0.15)]"
                     >
                         Master Your
                     </motion.span>
                     <motion.span
-                        initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+                        initial={{ opacity: 0, y: 60, filter: "blur(20px)" }}
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="block bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400"
+                        transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                        className="block bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 drop-shadow-[0_0_80px_rgba(168,85,247,0.4)]"
+                        style={{
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}
                     >
                         <TypewriterText
                             texts={taglines}
@@ -178,8 +210,8 @@ export function Hero() {
                 <motion.p
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 leading-relaxed"
+                    transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className="text-xl md:text-2xl text-gray-300/90 max-w-3xl mb-14 leading-relaxed font-light tracking-wide"
                 >
                     The operating system for modern commerce. Seamlessly manage inventory, credit, and analytics with the power of AI.
                 </motion.p>
@@ -187,8 +219,8 @@ export function Hero() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    className="flex flex-col sm:flex-row items-center gap-6"
+                    transition={{ duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex flex-col sm:flex-row items-center gap-6 relative z-20"
                 >
                     <Link href="/register">
                         <MagneticButton>
@@ -197,15 +229,16 @@ export function Hero() {
                                 whileTap={{ scale: 0.95 }}
                                 className="relative group"
                             >
-                                <Button size="lg" className="h-16 px-10 rounded-full bg-white text-black hover:bg-gray-200 font-bold text-lg shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_-10px_rgba(255,255,255,0.5)] transition-all duration-300 relative overflow-hidden">
+                                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-75 blur-xl group-hover:opacity-100 transition-opacity duration-500" />
+                                <Button size="lg" className="h-16 px-12 rounded-full bg-white text-black hover:bg-gray-100 font-bold text-lg shadow-[0_0_50px_-12px_rgba(255,255,255,0.5)] hover:shadow-[0_0_80px_-10px_rgba(255,255,255,0.8)] transition-all duration-500 relative overflow-hidden">
                                     <motion.span
-                                        className="absolute inset-0 bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-blue-400/20"
-                                        animate={{ x: ["-100%", "100%"] }}
-                                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                        className="absolute inset-0 bg-gradient-to-r from-purple-400/30 via-pink-400/30 to-blue-400/30"
+                                        animate={{ x: ["-200%", "200%"] }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                                     />
-                                    <span className="relative z-10 flex items-center">
+                                    <span className="relative z-10 flex items-center gap-2">
                                         Start Free Trial
-                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                        <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                                     </span>
                                 </Button>
                             </motion.div>
@@ -217,10 +250,10 @@ export function Hero() {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <Button variant="outline" size="lg" className="h-16 px-10 rounded-full border-white/10 bg-white/5 text-white hover:bg-white/10 backdrop-blur-md font-bold text-lg hover:border-white/30 transition-all relative overflow-hidden group">
+                                <Button variant="outline" size="lg" className="h-16 px-12 rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 backdrop-blur-xl font-bold text-lg hover:border-white/40 transition-all duration-500 relative overflow-hidden group shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                                     <span className="relative z-10">View Demo</span>
                                     <motion.div
-                                        className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                                     />
                                 </Button>
                             </motion.div>
